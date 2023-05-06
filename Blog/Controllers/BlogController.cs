@@ -14,39 +14,34 @@ namespace Blog.Controllers
 
         public IActionResult CreatorPage(Guid id)
         {
-            if (id != Guid.Empty)
+            if(id != Guid.Empty)
             {
-                BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == id);
-
+                BlogEntry existingEntry = Posts.Find(x => x.Id == id);
                 return View(model: existingEntry);
             }
-          
+
             return View();
-        }
-        [HttpGet]
-        public IActionResult EditPage([FromRoute] Guid id)
-        {
-            var post = Posts.Find(x => x.Id == id);
-            return View("CreatorPage", post);
         }
 
         [HttpPost]
         public IActionResult CreatorPage(BlogEntry entry)
         {
-            if(entry.Id == Guid.Empty)
+            if(entry.Id == Guid.Empty) 
             {
+                // New article
                 BlogEntry newEntry = new BlogEntry();
                 newEntry.Content = entry.Content;
                 newEntry.Id = Guid.NewGuid();
                 Posts.Add(newEntry);
             } else
             {
-                BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
-                existingEntry.Content = entry.Content;
+                //Existing article
+             BlogEntry existingEntry = Posts.FirstOrDefault(x => x.Id == entry.Id);
+             existingEntry.Content = entry.Content;
             }
 
             return RedirectToAction("Index");
         }
-
     }
 }
+
